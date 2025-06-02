@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>MONTAGE CLIP</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body class="menu-screen">
+
+  <!-- Vidéo de fond -->
+  <video autoplay muted loop playsinline id="video-montage-boss">
+    <source src="video/videomontage.mov" type="video/mp4" />
+  </video>
+
+  <!-- Formulaire style terminal -->
+  <form id="montage-form" class="mix-form">
+    <div class="popup-header-dos">
+      <div class="popup-title-dos">montage.exe</div>
+      <div class="popup-controls-dos">
+        <span class="dos-btn">-</span>
+        <span class="dos-btn">□</span>
+        <span class="dos-btn" onclick="window.location.href='index.html'">×</span>
+      </div>
+    </div>
+    <div class="popup-body-dos">
+  
+   <!-- Type de clip -->
+<p>> Type de clip :</p>
+<div class="montage-toggle">
+
+  <!-- Choix exclusif entre deux types -->
+  <div>
+    <input type="radio" id="clip-musical" name="type_clip" value="clip-musical" hidden />
+    <label for="clip-musical" class="montage-btn">[ Clip musical ]</label>
+  </div>
+
+  <div>
+    <input type="radio" id="video-youtube" name="type_clip" value="video-youtube" hidden />
+    <label for="video-youtube" class="montage-btn">[ Vidéo YouTube ]</label>
+  </div>
+
+  <!-- Option facultative supplémentaire -->
+  <div>
+    <input type="checkbox" id="teaser" name="option_extra" value="teaser" hidden />
+    <label for="teaser" class="montage-btn montage-teaser">[ Teaser ]</label>
+  </div>
+
+</div>
+
+      <!-- Lien vers les rushs -->
+      <p>> Lien vers les rushs (WeTransfer, SwissTransfer, Drive) :</p>
+      <input type="text" name="lien_rushs" placeholder="https://..." /><br><br>
+
+      <!-- Idées + Inspirations -->
+      <p>> Idée de montage + inspirations (clip / artiste) :</p>
+      <textarea name="idee_complete" rows="5" placeholder="Ex : Ambiance sombre comme SCH – Autobahn, slow motion au début, cuts rapides sur le refrain..."></textarea><br><br>
+
+      <!-- Budget -->
+      <p>> Renseigne ton budget :</p>
+      <input type="text" name="budget" /><br><br>
+
+      <!-- Contact -->
+      <p>> Moyen de contact (@instagram / @telegram / @discord) :</p>
+      <input type="text" name="contact" /><br><br>
+
+     <div class="montage-submit-wrapper">
+  <button type="submit" class="montage-submit-btn">ENVOYER LA DEMANDE</button>
+  <div class="montage-confirmation" id="confirmation-message">
+    <span class="montage-check">✔</span> Demande envoyée avec succès
+  </div>
+</div>
+<div id="error-message" class="form-error" style="color: red; margin-top: 10px; display: none;">
+  🚫 Merci de renseigner un contact (@insta, @telegram ou @discord)
+</div>
+  </form>
+  <!-- Son de fond pour cette page -->
+<audio id="musique-page" autoplay loop>
+  <source src="audio/ostsoundtrack1.mp3" type="audio/mpeg" />
+  Votre navigateur ne supporte pas l'audio HTML5.
+</audio>
+ <!-- Icône bureau XP pour les covers -->
+  <div id="icon-montage" class="desktop-icon" style="top: 150px; left: 40px;">
+    <img src="images/iconmontage.png" alt="Cover Portfolio" />
+    <div class="icon-label">Exemples de montage clip</div>
+  </div>
+  <!-- Pop-up montage.exe -->
+<div id="popup-montage" class="popup-montage" style="display: none;">
+  <div class="popup-montage-header">
+    <div class="popup-montage-title-wrapper">
+      <span class="popup-montage-title"> monteur_clip.exe</span>
+    </div>
+    <div class="popup-montage-controls">
+      <button class="btn-montage">−</button>
+      <button class="btn-montage">□</button>
+      <button type="button" class="btn-montage" onclick="document.getElementById('popup-montage').style.display='none'">×</button>
+    </div>
+  </div>
+  <div class="popup-montage-body">
+    Voici trois extraits de montages vidéo :<br><br>
+
+    <div class="video-gallery">
+      <video controls class="video-thumb">
+        <source src="video/clip1.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la vidéo HTML5.
+      </video>
+
+      <video controls class="video-thumb">
+        <source src="video/clip2.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la vidéo HTML5.
+      </video>
+
+    </div>
+
+    <br><br>
+     Nom : Nacy<br>
+     Profession : Monteur vidéo<br>
+     Instagram : <a href="https://instagram.com/nacy_______" target="_blank">@nacy_______</a>
+  </div>
+</div>
+<script>
+  // === Configuration TELEGRAM ===
+  const TELEGRAM_TOKEN = "7120145876:AAEs5zm2riPDXK6fKJ1LZiQgRDH0_wJvdc4";       // ← Remplace ici
+  const TELEGRAM_CHAT_ID = "-4897760948";   // ← Remplace ici
+
+  // === Gestion du formulaire ===
+  const form = document.getElementById('montage-form');
+  const confirmation = document.getElementById('confirmation-message');
+
+  form.addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const contactValue = form.querySelector('input[name="contact"]').value.trim();
+  const errorMsg = document.getElementById('error-message');
+
+  if (!contactValue) {
+    errorMsg.style.display = 'block';
+    setTimeout(() => {
+      errorMsg.style.display = 'none';
+    }, 4000);
+    return;
+  }
+
+  errorMsg.style.display = 'none';
+  confirmation.style.display = 'block';
+
+  const button = form.querySelector('.montage-submit-btn');
+  button.disabled = true;
+  button.style.opacity = 0.6;
+
+  const formData = new FormData(form);
+
+  const typeClip = formData.get("type_clip") || "Non précisé";
+  const teaser = formData.get("option_extra") ? "✅ Teaser demandé" : "❌ Pas de teaser";
+  const lienRushs = formData.get("lien_rushs") || "Aucun lien fourni";
+  const ideeComplete = formData.get("idee_complete") || "Aucune idée donnée";
+  const budget = formData.get("budget") || "Non précisé";
+  const contact = formData.get("contact") || "Non fourni";
+
+  const message = `
+🎬 *Nouvelle demande de montage clip !*
+
+🎞️ Type : ${typeClip}
+🎥 Teaser : ${teaser}
+📎 Lien rushs : ${lienRushs}
+
+🧠 Idées :
+${ideeComplete}
+
+💰 Budget : ${budget}
+📱 Contact : ${contact}
+`;
+
+  await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text: message,
+      parse_mode: "Markdown"
+    })
+  });
+});
+
+  // === Musique au clic ===
+  const audioPage = document.getElementById("musique-page");
+  window.addEventListener("click", () => {
+    audioPage.play().catch((e) => {
+      console.warn("Le son n'a pas pu être joué :", e);
+    });
+  }, { once: true });
+
+  // === Gestion du popup .exe ===
+  const iconMontage = document.getElementById("icon-montage");
+  const popupMontage = document.getElementById("popup-montage");
+
+  iconMontage.addEventListener("dblclick", () => {
+    popupMontage.style.display = "block";
+    popupMontage.style.animation = "fadeIn 0.4s ease-out";
+
+    const popupVideos = popupMontage.querySelectorAll("video");
+    popupVideos.forEach(video => {
+      video.addEventListener("play", () => {
+        if (!audioPage.paused) {
+          audioPage.pause();
+        }
+      });
+    });
+  });
+
+  const closeBtn = popupMontage.querySelector(".btn-montage:last-child");
+  closeBtn.addEventListener("click", () => {
+    popupMontage.style.display = "none";
+
+    const popupVideos = popupMontage.querySelectorAll("video");
+    popupVideos.forEach(video => {
+      video.pause();
+      video.currentTime = 0;
+    });
+
+    if (audioPage.paused) {
+      audioPage.play().catch(() => {});
+    }
+  });
+</script>
+</body>
+</html>

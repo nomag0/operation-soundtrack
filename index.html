@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Opération Soundtrack est la plate-forme idéale pour mettre en relation les artistes et labels musicaux avec des professionnels du son. Réservez en ligne des services de mixage audio, de création de pochette d’albums ou de singles et de montage de vidéo clips." />
+  <meta name="keywords" content="mixage audio, cover, pochette, montage, vidéo, service, musique, artiste, indépendant, label musical, production musicale, graphiste" />
+  <title>Opération Soundtrack</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="start-screen">
+  <video autoplay muted loop playsinline id="start-video">
+    <source src="video/alvastart1.mov" type="video/mp4" />
+  </video>
+
+  <button id="start-btn">
+  <img src="images/s30V4.png" alt="Press Start" />
+</button>
+</div>
+  <main id="menu" hidden class="menu-screen">
+  <video autoplay muted loop playsinline id="menu-video">
+    <source src="video/videomenu.mov" type="video/mp4" />
+  </video>  
+
+<nav class="menu-pixel">
+  <ul>
+    <li id="mix-btn"><span class="arrow">▶</span> MIX / MASTER</li>
+    <li id="montage-btn"><span class="arrow">▶</span> MONTAGE CLIP</li>
+    <li id="cover-btn"><span class="arrow">▶</span> COVER / 3D</li>
+    <li id="option-btn"><span class="arrow">▶</span> OPTIONS</li>
+  </ul>
+</nav>
+</li>
+      </ul>
+    </nav>
+
+  </main>
+<audio id="musique-menu" src="audio/ostsoundtrack1.mp3" autoplay loop></audio>
+
+<div id="popup-start" class="popup-window">
+  <div class="popup-header">
+    <div class="popup-header-title">ost.exe</div>
+    <div class="popup-header-buttons">
+      <span>_</span>
+      <span>[]</span>
+      <span onclick="document.getElementById('popup-start').style.display='none'">×</span>
+    </div>
+  </div>
+  <div class="popup-content">
+    Bienvenu sur OPERATION SOUND TRACK 
+  </div>
+</div>
+<div id="popup-projet" class="popup-window" style="top: 27%; left: 600px;">
+  <div class="popup-header">
+    <div class="popup-header-title">projet.exe</div>
+    <div class="popup-header-buttons">
+      <span>_</span>
+      <span>[]</span>
+      <span onclick="document.getElementById('popup-projet').style.display='none'">×</span>
+    </div>
+  </div>
+  <div class="popup-content">
+    Donnez vie à votre projet musical en quelques clics.
+  </div>
+</div>
+  <div id="popup-expert" class="popup-window popup-large" style="display: none; top: 70%; left: 50%; transform: translateX(-50%);">
+  <div class="popup-header">
+    <div class="popup-header-title">expert.exe</div>
+    <div class="popup-header-buttons">
+      <span>_</span>
+      <span>[]</span>
+      <span onclick="document.getElementById('popup-expert').style.display='none'">×</span>
+    </div>
+  </div>
+  <div class="popup-content">
+    Clips vidéo, visuels et mixage réalisés par des experts du son et de l’image.<br>
+    Concentre-toi sur ta musique, on s’occupe du reste.
+  </div>
+</div>
+<div id="popup-menu" class="popup-menu-dos" style="display: none;">
+  <div class="popup-header-dos">
+    <div class="popup-title-dos">menu.exe</div>
+    <div class="popup-controls-dos">
+      <span class="dos-btn">-</span>
+      <span class="dos-btn">□</span>
+      <span class="dos-btn" onclick="document.getElementById('popup-menu').style.display='none'">×</span>
+    </div>
+  </div>
+  
+  <div class="popup-body-dos menu-body">
+  <div>1: Choisis un service 
+
+       2: Décrit un minimum les idées de ton projet
+
+       3: Renseigne ton budget (Variable suivant le projet)
+
+       4: Renseigne un moyen de te contacter (@instagram/@telegram/@discord)
+
+       5: Payement sécurisé sur le site Web (40% Au lancement de la création 60 % restant Lors de la livraison du projet final)
+  </div>
+</div>
+</div>
+<div id="popup-options" class="popup-options-big" style="display: none;">
+  <div class="popup-header-dos">
+    <div class="popup-title-dos">option.exe</div>
+    <div class="popup-controls-dos">
+      <span class="dos-btn">-</span>
+      <span class="dos-btn">□</span>
+
+
+<span class="dos-btn" onclick="document.getElementById('popup-options').style.display='none'">×</span>
+    </div>
+  </div>
+ <div class="potard-wrapper">
+  <img src="images/potar1.png" alt="Potard de volume" id="potard-img" />
+  <div class="volume-affichage" id="volume-affichage">100%</div>
+</div>
+  </div>
+ </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const startBtn = document.getElementById("start-btn");
+  const startScreen = document.getElementById("start-screen");
+  const menu = document.getElementById("menu");
+  const audio = document.getElementById("musique-menu");
+
+  const popupExpert = document.getElementById("popup-expert");
+  const popupMenu = document.getElementById("popup-menu");
+
+  startBtn.addEventListener("click", () => {
+    document.getElementById("popup-start").style.display = "none";
+    document.getElementById("popup-projet").style.display = "none";
+    popupExpert.style.display = "none";
+
+    startScreen.style.display = "none";
+    menu.hidden = false;
+    audio.play();
+
+    setTimeout(() => {
+  popupMenu.style.display = "block";
+
+  // Force le reflow pour relancer l'animation si besoin
+  popupMenu.classList.remove("popup-particle");
+  void popupMenu.offsetWidth;
+
+  // Ajoute l'effet particules
+  popupMenu.classList.add("popup-particle");
+}, 1000);
+  });
+
+ // Affiche expert après 2.5s avec effet particules
+setTimeout(() => {
+  if (menu.hidden) {
+    popupExpert.style.display = "block";
+
+    // Retire l'effet s'il était déjà appliqué avant
+    popupExpert.classList.remove("popup-particle");
+    void popupExpert.offsetWidth; // force reflow
+
+    // Ajoute classe d'animation
+    popupExpert.classList.add("popup-particle");
+  }
+}, 2500);
+
+  // Potiard
+  const potardImg = document.getElementById('potard-img');
+  const volumeAff = document.getElementById('volume-affichage');
+  let volume = 1;
+
+  function updatePotard(angle) {
+    const minAngle = 135;
+    const maxAngle = 405;
+    angle = Math.max(minAngle, Math.min(maxAngle, angle));
+    const vol = (angle - minAngle) / (maxAngle - minAngle);
+    volume = Math.min(1, Math.max(0, vol));
+    audio.volume = volume;
+    volumeAff.textContent = `${Math.round(volume * 100)}%`;
+    potardImg.style.transform = `rotate(${angle}deg)`;
+  }
+
+  potardImg.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    volume += e.deltaY < 0 ? 0.02 : -0.02;
+    volume = Math.max(0, Math.min(1, volume));
+    const angle = 135 + volume * (405 - 135);
+    updatePotard(angle);
+  });
+
+  updatePotard(405);
+});
+const optionBtn = document.getElementById('option-btn');
+const popupOptions = document.getElementById('popup-options');
+
+optionBtn.addEventListener('click', () => {
+  popupOptions.style.display = 'block';
+
+  // Lancer l’animation de particules
+  popupOptions.classList.remove('popup-particles');
+  void popupOptions.offsetWidth; // Trick pour relancer l'animation
+  popupOptions.classList.add('popup-particles');
+});
+document.getElementById("mix-btn").addEventListener("click", () => {
+  window.location.href = "mix.html";
+});
+
+document.getElementById("montage-btn").addEventListener("click", () => {
+  window.location.href = "montage.html";
+});
+
+document.getElementById("cover-btn").addEventListener("click", () => {
+  window.location.href = "cover.html";
+});
+</script>
+
+</body>
+</html>

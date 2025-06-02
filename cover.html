@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>COVER / 3D</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body class="menu-screen">
+
+  <!-- Vidéo de fond -->
+  <video autoplay muted loop playsinline id="video-montage-boss">
+    <source src="video/videomontage.mov" type="video/mp4" />
+  </video>
+
+  <!-- Formulaire cover.exe -->
+  <form id="cover-form" class="mix-form">
+    <div class="popup-header-dos">
+      <div class="popup-title-dos">cover.exe</div>
+      <div class="popup-controls-dos">
+        <span class="dos-btn">-</span>
+        <span class="dos-btn">□</span>
+        <span class="dos-btn" onclick="window.location.href='index.html'">×</span>
+      </div>
+    </div>
+    <div class="popup-body-dos">
+
+      <p>> Type de projet :</p>
+      <div class="project-toggle">
+        <input type="radio" id="album" name="type_projet" value="album" hidden>
+        <label for="album" class="toggle-btn">ALBUM</label>
+
+        <input type="radio" id="mixtape" name="type_projet" value="mixtape" hidden>
+        <label for="mixtape" class="toggle-btn">MIXTAPE</label>
+
+        <input type="radio" id="ep" name="type_projet" value="ep" hidden>
+        <label for="ep" class="toggle-btn">EP</label>
+
+        <input type="radio" id="single" name="type_projet" value="single" hidden>
+        <label for="single" class="toggle-btn">SINGLE</label>
+      </div>
+
+      <p>> Joins une ou plusieurs images (photo, idée visuelle) <br>(facultatif) :</p>
+      <input type="file" name="images_cover" accept="image/*" multiple><br><br>
+
+      <p>> Décris un minimum tes idées de cover (facultatif) :</p>
+      <textarea name="idee_cover" rows="4"></textarea><br><br>
+
+      <p>> Renseigne tes inspirations (artiste - titre) (facultatif) :</p>
+      <textarea name="inspirations" rows="2"></textarea><br><br>
+
+      <p>> Renseigne le nom de ton projet :</p>
+      <input type="text" name="titre_projet"><br><br>
+
+      <p>> Moyen de contact (@instagram / @telegram / @discord) :</p>
+      <input type="text" name="contact"><br><br>
+
+      <div class="montage-submit-wrapper">
+        <button type="submit" class="montage-submit-btn">ENVOYER LA DEMANDE</button>
+        <div class="montage-confirmation" id="confirmation-message">
+          <span class="montage-check">✔</span> Demande envoyée avec succès
+        </div>
+      </div>
+    </div>
+    <div id="error-message" class="form-error" style="color: red; margin-top: 10px; display: none;">
+  🚫 Merci de renseigner un contact (@insta, @telegram ou @discord)
+</div>
+  </form>
+
+  <!-- Son de fond -->
+  <audio id="musique-page" autoplay loop>
+    <source src="audio/ostsoundtrack1.mp3" type="audio/mpeg" />
+    Votre navigateur ne supporte pas l'audio HTML5.
+  </audio>
+
+  <!-- Icône bureau XP pour les covers -->
+  <div id="icon-cover" class="desktop-icon" style="top: 150px; left: 40px;">
+    <img src="images/iconcover1.png" alt="Cover Portfolio" />
+    <div class="icon-label">Exemples de covers</div>
+  </div>
+
+  <!-- Pop-up cover.exe -->
+<div id="popup-cover" class="popup-cover" style="display: none;">
+  <div class="popup-cover-header">
+    <div class="popup-cover-title-wrapper">
+      <span class="popup-cover-title"> cover_designer.exe</span>
+    </div>
+    <div class="popup-cover-controls">
+      <button class="btn-cover">−</button>
+      <button class="btn-cover">□</button>
+      <button type="button" class="btn-cover" onclick="document.getElementById('popup-cover').style.display='none'">×</button>
+    </div>
+  </div>
+  <div class="popup-cover-body">
+    Clique sur une cover pour l’agrandir :<br><br>
+
+    <!-- Galerie de covers -->
+    <div class="cover-gallery">
+      <img src="images/cover1.jpg" alt="Cover 1" class="cover-thumb" onclick="openCover(this.src)" />
+      <img src="images/cover2.jpg" alt="Cover 2" class="cover-thumb" onclick="openCover(this.src)" />
+      <img src="images/cover3.jpg" alt="Cover 3" class="cover-thumb" onclick="openCover(this.src)" />
+    </div>
+
+    <br><br>
+
+    <!-- Infos du designer -->
+    > Nom : Grisci3l<br>
+    > Profession : Designer cover<br>
+    > Instagram : <a href="https://instagram.com/grisci3l" target="_blank">@grisci3l</a>
+  </div>
+ </div>
+</div>
+
+  <!-- Lightbox pour agrandissement -->
+  <div id="lightbox" class="lightbox" onclick="this.style.display='none'">
+    <img id="lightbox-img" src="" alt="Aperçu cover">
+  </div>
+
+  <script>
+  const TELEGRAM_TOKEN = "7120145876:AAEs5zm2riPDXK6fKJ1LZiQgRDH0_wJvdc4";
+  const TELEGRAM_CHAT_ID = "-4897760948";
+
+  const form = document.getElementById('cover-form');
+  const confirmation = document.getElementById('confirmation-message');
+  const button = form.querySelector('.montage-submit-btn');
+
+  form.addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const contactValue = form.querySelector('input[name="contact"]').value.trim();
+  const errorMsg = document.getElementById('error-message');
+
+  if (!contactValue) {
+    errorMsg.style.display = 'block';
+    setTimeout(() => {
+      errorMsg.style.display = 'none';
+    }, 4000);
+    return;
+  }
+
+  errorMsg.style.display = 'none';
+  confirmation.style.display = 'block';
+  button.disabled = true;
+  button.style.opacity = 0.6;
+
+  const formData = new FormData(form);
+  const typeProjet = formData.get("type_projet") || "Non précisé";
+  const ideeCover = formData.get("idee_cover") || "Non renseignée";
+  const inspirations = formData.get("inspirations") || "Aucune";
+  const titreProjet = formData.get("titre_projet") || "Sans titre";
+  const contact = formData.get("contact") || "Non fourni";
+
+  const message = `
+🖼️ *Nouvelle demande de cover !*
+
+📀 Type : ${typeProjet}
+🖋️ Titre : ${titreProjet}
+
+💡 Idées :
+${ideeCover}
+
+🎨 Inspirations :
+${inspirations}
+
+📱 Contact : ${contact}
+`;
+
+  await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text: message,
+      parse_mode: "Markdown"
+    })
+  });
+
+  const images = formData.getAll("images_cover");
+  for (const image of images) {
+    if (image && image.name) {
+      const data = new FormData();
+      data.append("chat_id", TELEGRAM_CHAT_ID);
+      data.append("document", image);
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument`, {
+        method: "POST",
+        body: data
+      });
+    }
+  }
+});
+
+  // === Musique de fond
+  const audioPage = document.getElementById("musique-page");
+  window.addEventListener("click", () => {
+    audioPage.play().catch((e) => {
+      console.warn("🎵 Le son n'a pas pu être joué :", e);
+    });
+  }, { once: true });
+
+  // === Popup cover_designer.exe
+  const iconCover = document.getElementById("icon-cover");
+  const popupCover = document.getElementById("popup-cover");
+
+  iconCover.addEventListener("dblclick", () => {
+    popupCover.style.display = "block";
+    popupCover.style.animation = "fadeIn 0.4s ease-out";
+  });
+
+  const closeBtn = popupCover.querySelector(".btn-cover:last-child");
+  closeBtn.addEventListener("click", () => {
+    popupCover.style.display = "none";
+  });
+
+  // === Lightbox
+  function openCover(src) {
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    lightboxImg.src = src;
+    lightbox.style.display = "flex";
+  }
+</script>
+</body>
+</html>

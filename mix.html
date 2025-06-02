@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>MIX / MASTER</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body class="menu-screen">
+
+  <!-- Vidéo de fond spéciale pour cette page -->
+  <video autoplay muted loop playsinline id="menu-video">
+    <source src="video/videomontage.mov" type="video/mp4">
+  </video>
+
+  <!-- POP-UP FORM MIX.EXE 100% PROPRE -->
+  <form id="mix-form" class="mix-form">
+    <div class="popup-header-dos">
+      <div class="popup-title-dos">mix.exe</div>
+      <div class="popup-controls-dos">
+        <span class="dos-btn">-</span>
+        <span class="dos-btn">□</span>
+        <span class="dos-btn" onclick="window.location.href='index.html'">×</span>
+      </div>
+    </div>
+    <div class="popup-body-dos">
+
+      <!-- Choix de projet -->
+     <!-- Choix de projet (boutons stylés rétro avec LED) -->
+<p>> Type de projet :</p>
+<div class="project-toggle">
+  <input type="radio" name="type" id="type-projet" value="projet" hidden>
+  <label for="type-projet" class="toggle-btn">[ PROJET ]</label>
+
+  <input type="radio" name="type" id="type-single" value="single" hidden>
+  <label for="type-single" class="toggle-btn">[ SINGLE ]</label>
+</div>
+      <!-- Upload MP3 -->
+      <p>> Envoie la maquette MP3 de ton son (facultatif) :</p>
+      <input type="file" name="fichier" accept=".mp3" multiple><br><br>
+
+      <!-- Idées de mix -->
+      <p>> Décris un minimum tes idées de mix (facultatif) :</p>
+      <textarea name="idees_mix" rows="4"></textarea><br><br>
+
+      <!-- Inspirations -->
+      <p>> Renseigne tes inspirations (artiste - titre) :</p>
+      <textarea name="inspirations" rows="2"></textarea><br><br>
+
+      <!-- Budget -->
+      <p>> Renseigne ton budget :</p>
+      <input type="text" name="budget"><br><br>
+
+      <!-- Contact -->
+      <p>> Moyen de contact (@instagram / @telegram / @discord) :</p>
+      <input type="text" name="contact"><br><br>
+
+      <!-- Bouton envoyer avec message de confirmation -->
+<div class="submit-wrapper">
+  <button type="submit" class="submit-btn">ENVOYER LA DEMANDE</button>
+  <div class="confirmation-message" id="confirmation-message">
+    <span class="check-symbol">✔</span> Demande envoyée avec succès
+  </div>
+</div>
+<div id="error-message" class="form-error" style="color: red; margin-top: 10px; display: none;">
+  🚫 Merci de renseigner un contact (@insta, @telegram ou @discord)
+</div>
+  </form>
+  <!-- Son de fond pour cette page -->
+<audio id="musique-page" autoplay loop>
+  <source src="audio/ostsoundtrack1.mp3" type="audio/mpeg" />
+  Votre navigateur ne supporte pas l'audio HTML5.
+</audio>
+
+
+<!-- Icône bureau XP -->
+<div id="icon-mix" class="desktop-icon">
+  <img src="images/iconmix1.png" alt="Exemple de mix" />
+  <div class="icon-label">Exemple de mix</div>
+</div>
+
+<!-- Pop-up .exe terminal vert lime spécifique à l'ingé mix -->
+<div id="popup-ingermix-style" class="popup-ingermix-style" style="display: none;">
+ <div class="popup-ingermix-header">
+  <div class="popup-ingermix-title-wrapper">
+    <span class="popup-ingermix-title"> ingénieur_son.exe</span>
+  </div>
+  <div class="popup-ingermix-controls">
+    <button class="btn-ingermix">−</button>
+    <button class="btn-ingermix">□</button>
+    <button type="button" class="btn-ingermix" onclick="document.getElementById('popup-ingermix-style').style.display='none'">×</button>
+  </div>
+</div>
+  <div class="popup-ingermix-body">
+    Compare la version maquette et le mix final :<br><br>
+    <div class="disc-buttons">
+  <img src="images/disque1.png" alt="Maquette" class="disc-img" onclick="playDemo('audio/maquette.mp3')" />
+  <img src="images/disque2.png" alt="Mix" class="disc-img" onclick="playDemo('audio/mix.mp3')" />
+</div>
+<br><br>
+ Exemple de mix :<br><br>
+<div class="disc-buttons solo">
+  <img src="images/disque3.png" alt="Exemple de mix" class="disc-img" onclick="playDemo('audio/exemple-mix.wav')" />
+</div>
+    <br><br>
+     Nom : Medievil<br>
+     Profession : Ingénieur du son<br>
+     Instagram : <a href="https://instagram.com/mdievil_" target="_blank">@mdievil_</a>
+  </div>
+</div>
+
+<script>
+  const TELEGRAM_TOKEN = "7120145876:AAEs5zm2riPDXK6fKJ1LZiQgRDH0_wJvdc4";
+  const TELEGRAM_CHAT_ID = "-4897760948";
+
+  const form = document.getElementById('mix-form');
+  const confirmation = document.getElementById('confirmation-message');
+  const button = form.querySelector('.submit-btn');
+
+  form.addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const contactValue = form.querySelector('input[name="contact"]').value.trim();
+  const errorMsg = document.getElementById('error-message');
+
+  if (!contactValue) {
+    errorMsg.style.display = 'block'; // Affiche le message
+    setTimeout(() => {
+      errorMsg.style.display = 'none'; // Le masque après 4 secondes
+    }, 4000);
+    return;
+  }
+
+  errorMsg.style.display = 'none'; // Au cas où une erreur précédente traîne
+
+  confirmation.style.display = 'block';
+  button.disabled = true;
+  button.style.opacity = 0.6;
+
+  const formData = new FormData(form);
+
+  const type = formData.get("type") || "Non précisé";
+  const ideesMix = formData.get("idees_mix") || "Non renseigné";
+  const inspirations = formData.get("inspirations") || "Aucune";
+  const budget = formData.get("budget") || "Non précisé";
+  const contact = formData.get("contact") || "Non fourni";
+
+  const message = `
+🎧 *Nouvelle demande Mix / Master !*
+
+🎵 Type : ${type}
+🧠 Idées :
+${ideesMix}
+
+🎶 Inspirations :
+${inspirations}
+
+💸 Budget : ${budget}
+📱 Contact : ${contact}
+  `;
+
+  await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text: message,
+      parse_mode: "Markdown"
+    })
+  });
+
+  const fichiers = formData.getAll("fichier");
+  for (const fichier of fichiers) {
+    if (fichier && fichier.name) {
+      const data = new FormData();
+      data.append("chat_id", TELEGRAM_CHAT_ID);
+      data.append("document", fichier);
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument`, {
+        method: "POST",
+        body: data
+      });
+    }
+  }
+});
+
+  // === Musique de fond
+  const audioPage = document.getElementById("musique-page");
+  window.addEventListener("click", () => {
+    audioPage.play().catch((e) => {
+      console.warn("🎵 Le son n'a pas pu être joué :", e);
+    });
+  }, { once: true });
+
+  // === Gestion popup .exe portfolio
+  const iconMix = document.getElementById("icon-mix");
+  const popupMix = document.getElementById("popup-ingermix-style");
+  let demoPlayer = null;
+
+  iconMix.addEventListener("dblclick", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    popupMix.style.display = "block";
+    popupMix.style.animation = "fadeIn 0.4s ease-out";
+  });
+
+  function playDemo(src) {
+    if (!audioPage.paused) {
+      audioPage.pause();
+    }
+    if (demoPlayer) {
+      demoPlayer.pause();
+      demoPlayer.currentTime = 0;
+    }
+    demoPlayer = new Audio(src);
+    demoPlayer.play();
+  }
+
+  const closeBtn = popupMix.querySelector(".btn-ingermix:last-child");
+  closeBtn.addEventListener("click", () => {
+    popupMix.style.display = "none";
+    if (demoPlayer) {
+      demoPlayer.pause();
+      demoPlayer.currentTime = 0;
+    }
+    if (audioPage.paused) {
+      audioPage.play().catch(() => {});
+    }
+  });
+</script>
+</body>
+</html>
