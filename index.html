@@ -141,30 +141,30 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
   popupMenu.style.display = "block";
 
-  // Force le reflow pour relancer l'animation si besoin
+
   popupMenu.classList.remove("popup-particle");
   void popupMenu.offsetWidth;
 
-  // Ajoute l'effet particules
+  
   popupMenu.classList.add("popup-particle");
 }, 1000);
   });
 
- // Affiche expert après 2.5s avec effet particules
+ 
 setTimeout(() => {
   if (menu.hidden) {
     popupExpert.style.display = "block";
 
-    // Retire l'effet s'il était déjà appliqué avant
+   
     popupExpert.classList.remove("popup-particle");
-    void popupExpert.offsetWidth; // force reflow
+    void popupExpert.offsetWidth; 
 
-    // Ajoute classe d'animation
+    
     popupExpert.classList.add("popup-particle");
   }
 }, 2500);
 
-  // Potiard
+  
   const potardImg = document.getElementById('potard-img');
   const volumeAff = document.getElementById('volume-affichage');
   let volume = 1;
@@ -196,9 +196,9 @@ const popupOptions = document.getElementById('popup-options');
 optionBtn.addEventListener('click', () => {
   popupOptions.style.display = 'block';
 
-  // Lancer l’animation de particules
+ 
   popupOptions.classList.remove('popup-particles');
-  void popupOptions.offsetWidth; // Trick pour relancer l'animation
+  void popupOptions.offsetWidth; 
   popupOptions.classList.add('popup-particles');
 });
 document.getElementById("mix-btn").addEventListener("click", () => {
